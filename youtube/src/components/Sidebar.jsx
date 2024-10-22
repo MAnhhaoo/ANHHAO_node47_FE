@@ -1,21 +1,35 @@
-import React from "react";
+import React , {useState , useEffect} from "react";
 import { Stack } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
+import { getTypeAPI } from "../utils/fetchFromAPI";
+import { toast } from "react-toastify";
 
-let categories = [
-  { type_name: 'New', icon: <i className="fa-solid fa-house"></i>, },
-  { type_name: 'Coding', icon: <i className="fa-solid fa-code"></i>, },
-  { type_name: 'Music', icon: <i className="fa-solid fa-music"></i> },
-  { type_name: 'Movie', icon: <i className="fa-solid fa-video"></i>, },
-  { type_name: 'Gaming', icon: <i className="fa-sharp fa-solid fa-gamepad"></i>, },
-  { type_name: 'Sport', icon: <i className="fa-solid fa-baseball"></i> },
-  { type_name: 'Fashion', icon: <i className="fa-sharp fa-solid fa-shirt"></i>, },
-  { type_name: 'Gym', icon: <i className="fa-solid fa-dumbbell"></i>, },
-  { type_name: 'Crypto', icon: <i className="fa-solid fa-diamond"></i>, },
-];
+// let categories = [
+//   { type_name: 'New', icon: <i className="fa-solid fa-house"></i>, },
+//   { type_name: 'Coding', icon: <i className="fa-solid fa-code"></i>, },
+//   { type_name: 'Music', icon: <i className="fa-solid fa-music"></i> },
+//   { type_name: 'Movie', icon: <i className="fa-solid fa-video"></i>, },
+//   { type_name: 'Gaming', icon: <i className="fa-sharp fa-solid fa-gamepad"></i>, },
+//   { type_name: 'Sport', icon: <i className="fa-solid fa-baseball"></i> },
+//   { type_name: 'Fashion', icon: <i className="fa-sharp fa-solid fa-shirt"></i>, },
+//   { type_name: 'Gym', icon: <i className="fa-solid fa-dumbbell"></i>, },
+//   { type_name: 'Crypto', icon: <i className="fa-solid fa-diamond"></i>, },
+// ];
 
 const Categories = ({ selectedCategory, setSelectedCategory }) => {
+
+  const [categories ,setCategories] = useState([]);
+
+  useEffect(()=>{
+    getTypeAPI().then((result)=>{
+      setCategories(result);
+    }).catch((error)=>{
+      toast.error(error.response.data.massage)
+      console.log("err call api get list type video from back end")
+    })
+
+  },[])
 
 
   const navigate = useNavigate();
@@ -39,7 +53,8 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
         key={category.type_id}
       >
         <span style={{ color: category.name === selectedCategory ? "white" : "red", marginRight: "15px" }}>
-          {category.icon}
+          <i className={category.icon}></i>
+          
         </span>
         <span style={{ opacity: category.name === selectedCategory ? "1" : "0.8" }}>
           {category.type_name}
